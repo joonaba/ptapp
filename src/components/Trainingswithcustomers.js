@@ -1,24 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
-import DeleteTraining from './Deletetraining.js'
-const TrainingList = () => {
+
+const TrainingsWithCustomers = () => {
     const [trainings, setTrainings] = useState([]);
 
     useEffect(() => fetchTrainings(), []);
 
     const fetchTrainings = () => {
-        fetch('https://customerrest.herokuapp.com/api/trainings')
+        fetch('https://customerrest.herokuapp.com/gettrainings', {method: 'GET'})
         .then(response => response.json())
-        .then(data => setTrainings(data.content))
+        .then(data => setTrainings(data))
     }
 
-    const deleteTraining = (link) => {
-        fetch(link, {method: 'DELETE'})
-        .then(res => fetchTrainings())
-        .catch(err => console.error(err))
-    }
-
+    
 
     const columns = [
         {
@@ -33,12 +28,12 @@ const TrainingList = () => {
             Header: 'Activity',
             accessor: 'activity'
         },
-       
-        {
-            
-            Cell: row => <DeleteTraining deleteTraining={deleteTraining} training={row.original} />
 
-        }
+        {
+            Header: 'Customer',
+            accessor: 'customer.lastname'
+        },
+        
         
     ]
     return (
@@ -49,4 +44,4 @@ const TrainingList = () => {
     );
 }
 
-export default TrainingList;
+export default TrainingsWithCustomers;
